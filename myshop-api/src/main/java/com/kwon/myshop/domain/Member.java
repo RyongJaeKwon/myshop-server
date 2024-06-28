@@ -1,0 +1,53 @@
+package com.kwon.myshop.domain;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Member {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member_id")
+    private Long id;
+
+    private String userId;
+
+    private String password;
+
+    private String email;
+
+    private String name;
+
+    private String nickname;
+
+    private String phone;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @Embedded
+    @Column(nullable = false)
+    private Address address;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Order> orders = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Cart cart;
+
+    public void addRole(Role role) {
+        this.role = role;
+    }
+
+}
