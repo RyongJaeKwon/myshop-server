@@ -3,6 +3,7 @@ package com.kwon.myshop.config;
 import com.kwon.myshop.security.CustomLoginFailHandler;
 import com.kwon.myshop.security.CustomLoginSuccessHandler;
 import com.kwon.myshop.security.jwt.JWTFilter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +23,12 @@ import java.util.Arrays;
 @Configuration
 @Slf4j
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final CustomLoginSuccessHandler customLoginSuccessHandler;
+    private final CustomLoginFailHandler customLoginFailHandler;
+    private final JWTFilter jwtFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -37,11 +43,11 @@ public class SecurityConfig {
 
         http.formLogin(config -> {
             config.loginPage("/member/login");
-            config.successHandler(new CustomLoginSuccessHandler());
-            config.failureHandler(new CustomLoginFailHandler());
+            config.successHandler(customLoginSuccessHandler);
+            config.failureHandler(customLoginFailHandler);
         });
 
-        http.addFilterBefore(new JWTFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

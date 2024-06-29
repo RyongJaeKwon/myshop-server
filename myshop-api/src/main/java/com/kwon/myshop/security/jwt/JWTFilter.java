@@ -1,21 +1,24 @@
 package com.kwon.myshop.security.jwt;
 
 import com.google.gson.Gson;
-import com.kwon.myshop.exception.MyshopJWTException;
-import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Map;
 
 @Slf4j
+@RequiredArgsConstructor
+@Component
 public class JWTFilter extends OncePerRequestFilter {
+
+    private final JWTUtil jwtUtil;
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
@@ -48,7 +51,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
         try {
             String accessToken = authorizationHeader.substring(7);
-            Map<String, Object> claims = JWTUtil.validateToken(accessToken);
+            Map<String, Object> claims = jwtUtil.validateToken(accessToken);
 
             filterChain.doFilter(request, response);
         } catch (Exception e) {

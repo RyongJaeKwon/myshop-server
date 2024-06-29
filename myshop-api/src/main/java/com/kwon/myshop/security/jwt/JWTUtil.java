@@ -6,8 +6,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.PostConstruct;
-import lombok.Builder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -20,20 +18,30 @@ import java.util.Map;
 @Component
 public class JWTUtil {
 
-    private static SecretKey secretKey;
+    private final SecretKey secretKey;
+    private final int accessTokenExpirationMinutes;
+    private final int refreshTokenExpirationMinutes;
 
-//    @Value("${spring.jwt.secretkey}")
-    private String key = "rnjsdfklasnme213njsfasljzx09sdfknewqmsadfk";
-
-    @PostConstruct
-    public void init() {
+    public JWTUtil(@Value("${jwt.secret-key}") String key,
+                   @Value("${jwt.access-token-expiration-minutes}") int accessTokenExpirationMinutes,
+                   @Value("${jwt.refresh-token-expiration-minutes}") int refreshTokenExpirationMinutes) {
         if (key == null || key.isEmpty()) {
-            throw new IllegalArgumentException("JWT secret key is not configured properly.");
+            throw new IllegalArgumentException("JWT secret key is not found");
         }
-        secretKey = Keys.hmacShaKeyFor(key.getBytes(StandardCharsets.UTF_8));
+        this.secretKey = Keys.hmacShaKeyFor(key.getBytes(StandardCharsets.UTF_8));
+        this.accessTokenExpirationMinutes = accessTokenExpirationMinutes;
+        this.refreshTokenExpirationMinutes = refreshTokenExpirationMinutes;
     }
 
-    public static String createJwt(Map<String, Object> valueMap, int min) {
+    public String createAccessToken(Map<String, Object> valueMap) {
+        return createJwt(valueMap, accessTokenExpirationMinutes);
+    }
+
+    public String createRefreshToken(Map<String, Object> valueMap) {
+        return createJwt(valueMap, refreshTokenExpirationMinutes);
+    }
+
+    public String createJwt(Map<String, Object> valueMap, int min) {
 
         return Jwts.builder()
                 .setHeader(Map.of("typ", "JWT"))
@@ -44,7 +52,7 @@ public class JWTUtil {
                 .compact();
     }
 
-    public static Map<String, Object> validateToken(String token) {
+    public Map<String, Object> validateToken(String token) {
 
         Map<String, Object> claims = null;
 
