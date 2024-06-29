@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -18,7 +17,11 @@ import java.io.IOException;
 import java.util.Map;
 
 @Slf4j
+@RequiredArgsConstructor
+@Component
 public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
+
+    private final JWTUtil jwtUtil;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -33,8 +36,8 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
         MemberDetails memberDetails = (MemberDetails)authentication.getPrincipal();
 
         Map<String, Object> claims = memberDetails.getClaims();
-        String accessToken = JWTUtil.createJwt(claims, 3);
-        String refreshToken = JWTUtil.createJwt(claims, 60 * 24);
+        String accessToken = jwtUtil.createAccessToken(claims);
+        String refreshToken = jwtUtil.createRefreshToken(claims);
         claims.put("accessToken", accessToken);
         claims.put("refreshToken", refreshToken);
 
