@@ -5,7 +5,6 @@ import com.kwon.myshop.dto.MemberResponse;
 import com.kwon.myshop.service.MemberService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -25,18 +24,18 @@ public class MemberController {
         memberService.create(memberDto);
     }
 
-    @GetMapping("/{userId}/check")
-    public Map<String, String> idCheck(@PathVariable @NotBlank(message = "아이디를 입력해주세요") String userId) {
+    @GetMapping("/user-id/{userId}/check")
+    public Map<String, String> duplicateUserIdCheck(@PathVariable @NotBlank(message = "아이디를 입력해주세요") String userId) {
         return memberService.checkUserIdDuplicate(userId);
     }
 
-    @GetMapping("/{phone}/check")
-    public Map<String, String> telCheck(@PathVariable @NotBlank(message = "번호를 입력해주세요") String phone) {
+    @GetMapping("/user-phone/{phone}/check")
+    public Map<String, String> duplicatePhoneCheck(@PathVariable String phone) {
         return memberService.checkPhoneDuplicate(phone);
     }
 
-    @GetMapping("/{email}/check")
-    public Map<String, String> emailCheck(@PathVariable @NotBlank(message = "이메일을 입력해주세요") String email) {
+    @GetMapping("/user-email/{email}/check")
+    public Map<String, String> duplicateEmailCheck(@PathVariable @NotBlank(message = "이메일을 입력해주세요") String email) {
         return memberService.checkEmailDuplicate(email);
     }
 
