@@ -13,7 +13,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @Transactional(readOnly = true)
@@ -43,14 +46,41 @@ public class MemberService {
     }
 
     public Map<String, String> checkUserIdDuplicate(String userId) {
+        String userIdPattern = "^[a-zA-Z0-9]{5,12}$";
+        Pattern pattern = Pattern.compile(userIdPattern);
+        Matcher matcher = pattern.matcher(userId);
+
+        if (!matcher.matches()) {
+            Map<String, String> map = Collections.singletonMap("message", "올바르지 않는 형식입니다");
+            return map;
+        }
+
         return DuplicateUserIdCheck.getMessage(memberRepository.existsByUserId(userId));
     }
 
     public Map<String, String> checkEmailDuplicate(String email) {
+        String emailPattern = "^[a-zA-Z0-9]+@[a-zA-Z0-9.]+\\.[a-zA-Z]{2,}$";
+        Pattern pattern = Pattern.compile(emailPattern);
+        Matcher matcher = pattern.matcher(email);
+
+        if (!matcher.matches()) {
+            Map<String, String> map = Collections.singletonMap("message", "올바르지 않는 형식입니다");
+            return map;
+        }
+
         return DuplicateEmailCheck.getMessage(memberRepository.existsByEmail(email));
     }
 
     public Map<String, String> checkPhoneDuplicate(String phone) {
+        String phonePattern = "^(010|011|016|017|018|019)-\\d{3,4}-\\d{4}$";
+        Pattern pattern = Pattern.compile(phonePattern);
+        Matcher matcher = pattern.matcher(phone);
+
+        if (!matcher.matches()) {
+            Map<String, String> map = Collections.singletonMap("message", "올바르지 않는 형식입니다");
+            return map;
+        }
+
         return DuplicatePhoneCheck.getMessage(memberRepository.existsByPhone(phone));
     }
 
