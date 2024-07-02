@@ -40,6 +40,12 @@ public class MemberDto {
         this.email = email.replaceAll("\\s", "");
         this.name = name.replaceAll("\\s", "");
         this.phone = phone.replaceAll("\\s", "");
-        this.address = address;
+        if (address != null) {
+            this.address = AddressDto.builder()
+                    .postcode(address.getPostcode().replaceAll("\\s", ""))
+                    .basic_address(address.getBasic_address())
+                    .detail_address(address.getDetail_address())
+                    .build();
+        }
     }
 }

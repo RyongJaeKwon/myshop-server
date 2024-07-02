@@ -45,7 +45,7 @@ public class MemberService {
         return MemberResponse.entityToDto(member);
     }
 
-    public Map<String, String> checkUserIdDuplicate(String userId) {
+    public Map<String, String> duplicateUserIdCheck(String userId) {
         String userIdPattern = "^[a-zA-Z0-9]{5,12}$";
         Pattern pattern = Pattern.compile(userIdPattern);
         Matcher matcher = pattern.matcher(userId);
@@ -58,8 +58,8 @@ public class MemberService {
         return DuplicateUserIdCheck.getMessage(memberRepository.existsByUserId(userId));
     }
 
-    public Map<String, String> checkEmailDuplicate(String email) {
-        String emailPattern = "^[a-zA-Z0-9]+@[a-zA-Z0-9.]+\\.[a-zA-Z]{2,}$";
+    public Map<String, String> duplicateEmailCheck(String email) {
+        String emailPattern = "^[a-zA-Z0-9]+@[a-zA-Z0-9]+\\.[a-zA-Z]{3}$";
         Pattern pattern = Pattern.compile(emailPattern);
         Matcher matcher = pattern.matcher(email);
 
@@ -69,19 +69,6 @@ public class MemberService {
         }
 
         return DuplicateEmailCheck.getMessage(memberRepository.existsByEmail(email));
-    }
-
-    public Map<String, String> checkPhoneDuplicate(String phone) {
-        String phonePattern = "^(010|011|016|017|018|019)-\\d{3,4}-\\d{4}$";
-        Pattern pattern = Pattern.compile(phonePattern);
-        Matcher matcher = pattern.matcher(phone);
-
-        if (!matcher.matches()) {
-            Map<String, String> map = Collections.singletonMap("message", "올바르지 않는 형식입니다");
-            return map;
-        }
-
-        return DuplicatePhoneCheck.getMessage(memberRepository.existsByPhone(phone));
     }
 
     public MemberResponse findByUserIdOrEmail(String userId, String email) {
