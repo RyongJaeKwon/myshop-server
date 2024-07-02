@@ -2,6 +2,8 @@ package com.kwon.myshop.controller;
 
 import com.kwon.myshop.dto.ErrorResponse;
 import com.kwon.myshop.exception.MyshopException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,9 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
@@ -42,7 +42,7 @@ public class ExceptionController {
 
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .code(HttpStatus.BAD_REQUEST.toString())
-                .message("잘못된 요청입니다.")
+                .message("잘못된 요청입니다")
                 .validation(validation)
                 .build();
 
