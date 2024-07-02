@@ -12,7 +12,7 @@ import lombok.Getter;
 public class MemberDto {
 
     @NotBlank(message = "아이디를 입력해주세요")
-    @Pattern(regexp = "^[a-zA-Z](?=.*\\d)[a-zA-Z\\d]{4,11}$", message = "올바르지 않는 형식입니다")   // 5~12자 내외
+    @Pattern(regexp = "^[a-zA-Z0-9]{5,12}$", message = "올바르지 않는 형식입니다")   // 5~12자 내외
     private String userId;
 
     @NotBlank(message = "비밀번호를 입력해주세요")
@@ -27,7 +27,7 @@ public class MemberDto {
     private String name;
 
     @NotBlank(message = "번호를 입력해주세요")
-    @Pattern(regexp = "^(010)-[0-9]{4}-[0-9]{4}$", message = "올바르지 않는 번호 형식입니다")
+    @Pattern(regexp = "^(010|011|016|017|018|019)-\\d{3,4}-\\d{4}$", message = "올바르지 않는 형식입니다")
     private String phone;
 
     @Valid
