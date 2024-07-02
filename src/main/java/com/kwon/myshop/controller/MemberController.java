@@ -26,17 +26,12 @@ public class MemberController {
 
     @GetMapping("/user-id/{userId}/check")
     public Map<String, String> duplicateUserIdCheck(@PathVariable @NotBlank(message = "아이디를 입력해주세요") String userId) {
-        return memberService.checkUserIdDuplicate(userId);
-    }
-
-    @GetMapping("/user-phone/{phone}/check")
-    public Map<String, String> duplicatePhoneCheck(@PathVariable String phone) {
-        return memberService.checkPhoneDuplicate(phone);
+        return memberService.duplicateUserIdCheck(userId);
     }
 
     @GetMapping("/user-email/{email}/check")
     public Map<String, String> duplicateEmailCheck(@PathVariable @NotBlank(message = "이메일을 입력해주세요") String email) {
-        return memberService.checkEmailDuplicate(email);
+        return memberService.duplicateEmailCheck(email);
     }
 
     @GetMapping("/{id}")
