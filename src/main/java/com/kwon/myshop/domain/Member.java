@@ -26,8 +26,6 @@ public class Member extends BaseEntity {
 
     private String name;
 
-    private String nickname;
-
     private String phone;
 
     @Enumerated(EnumType.STRING)
