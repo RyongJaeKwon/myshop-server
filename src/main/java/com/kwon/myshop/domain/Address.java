@@ -1,6 +1,6 @@
 package com.kwon.myshop.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Embeddable;
 import lombok.*;
 
 @Embeddable
