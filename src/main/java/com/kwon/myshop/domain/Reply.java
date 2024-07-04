@@ -4,29 +4,32 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CartItem {
+public class Reply extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @JoinColumn(name = "member_id")
+    @JsonIgnore
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cart_id")
+    @JoinColumn(name = "product_id")
     @JsonIgnore
-    private Cart cart;
+    private Product product;
 
-    private int quantity;
+    private String content;
 
-    public void changeQuantity(int quantity) {
-        this.quantity = quantity;
-    }
+    private LocalDate regDate;
+
+    private LocalDate modDate;
 }
