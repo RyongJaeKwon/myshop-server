@@ -8,10 +8,10 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ProductImage {
+public class ItemImage {
 
     private String fileName;
-    private int ord;            // 대표 이미지만 출력할때 사용
+    private int ord;
 
     public void setOrd(int ord) {
         this.ord = ord;
