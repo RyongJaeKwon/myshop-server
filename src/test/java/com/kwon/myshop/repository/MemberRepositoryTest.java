@@ -43,7 +43,6 @@ public class MemberRepositoryTest {
                     .password(passwordEncoder.encode("1111"))
                     .name("user" + i)
                     .phone("010-1111-111" + i)
-                    .nickname("nickname" + i)
                     .address(address)
                     .build();
 
