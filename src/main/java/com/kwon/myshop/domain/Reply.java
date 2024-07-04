@@ -23,9 +23,9 @@ public class Reply extends BaseEntity {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "item_id")
     @JsonIgnore
-    private Product product;
+    private Item item;
 
     private String content;
 
