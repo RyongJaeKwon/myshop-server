@@ -6,6 +6,7 @@ import lombok.*;
 @Embeddable
 @Getter
 @Builder
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ItemImage {
