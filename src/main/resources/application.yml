@@ -21,9 +21,9 @@ spring:
       org.springframework.security.web: trace
 
   jwt:
-    secret-key: ${JWT_SECRET_KEY}
-    access-token-expiration-minutes: ${ACCESS_EXPIRED}
-    refresh-token-expiration-minutes: ${REFRESH_EXPIRED}
+    secret-key: ${JWT_SECRET_KEY:rjskdiwjqkslsdkdnsmasdfoiuwqoirbfasdlkas}
+    access-token-expiration-minutes: ${ACCESS_EXPIRED:1}
+    refresh-token-expiration-minutes: ${REFRESH_EXPIRED:60}
 
   servlet:
     multipart:
@@ -31,3 +31,11 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
       file-size-threshold: 0
+
+  src:
+    main:
+      java:
+        com:
+          kwon:
+            upload:
+              path: upload
