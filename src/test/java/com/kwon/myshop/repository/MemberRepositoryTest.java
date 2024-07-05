@@ -5,20 +5,21 @@ import com.kwon.myshop.domain.Member;
 import com.kwon.myshop.domain.Role;
 import com.kwon.myshop.exception.MemberNotFoundException;
 import lombok.extern.log4j.Log4j2;
-import org.junit.jupiter.api.AfterEach;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @SpringBootTest
 //@Transactional
-@Log4j2
+@Slf4j
 public class MemberRepositoryTest {
 
     @Autowired
@@ -38,11 +39,11 @@ public class MemberRepositoryTest {
                     .build();
 
             Member member = Member.builder()
-                    .email("user" + i + "@aaa.com")
+                    .email("kwon" + i + "@naver.com")
                     .userId("kyj53"+ i)
-                    .password(passwordEncoder.encode("1111"))
-                    .name("user" + i)
-                    .phone("010-1111-111" + i)
+                    .password(passwordEncoder.encode("@Rnjsdydwo1"))
+                    .name("kwon" + i)
+                    .phone("010-0000-000" + i)
                     .address(address)
                     .build();
 
@@ -57,26 +58,8 @@ public class MemberRepositoryTest {
     }
 
     @Test
-    public void testRead() {
-        String userId = "kyj530";
-
-        Member member = memberRepository.findByUserId(userId).get();
-        log.info("------------------------");
-        log.info(member.getRole());
-    }
-
-    @Test
-    public void testRead1() {
-        String email = "user9@aaa.com";
-
-        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new MemberNotFoundException());
-        log.info("------------------------");
-        log.info(member.getRole());
-    }
-
-    @Test
     public void deleteByMemberEmailTest() {
-        String email = "user5@aaa.com";
+        String email = "kwon5@naver.com";
         memberRepository.deleteByEmail(email);
 
         Assertions.assertNull(memberRepository.findByEmail(email));
@@ -86,22 +69,16 @@ public class MemberRepositoryTest {
     @Test
     public void saveAddressTest() {
         Address address = Address.builder().postcode("12345").basic_address("서울시").detail_address("강남구").build();
-        Member member = Member.builder().name("kwon").email("gyj343@naver.com").password(passwordEncoder.encode("1234")).nickname("권군").phone("010-1111-2222").address(address).build();
+        Member member = Member.builder().name("kwon").email("gyj343@naver.com").password(passwordEncoder.encode("1234")).phone("010-1111-2222").address(address).build();
 
         memberRepository.save(member);
     }
-
-
-
-
-
-
 
     @Test
     @DisplayName("회원데이터 등록")
     public void saveMemberTest() throws Exception {
         //given
-        Member member = Member.builder().name("kwon").email("gyj343@naver.com").password(passwordEncoder.encode("1234")).nickname("권군").phone("010-1111-2222").build();
+        Member member = Member.builder().name("kwon").email("gyj343@naver.com").password(passwordEncoder.encode("@%QWdiasdfnxj1")).phone("010-1111-2222").build();
 
         //when
         memberRepository.save(member);
@@ -114,7 +91,6 @@ public class MemberRepositoryTest {
         Assertions.assertEquals(member.getEmail(), savedMember.getEmail());
         Assertions.assertEquals(member.getName(), savedMember.getName());
         Assertions.assertEquals(member.getPassword(), savedMember.getPassword());
-        Assertions.assertEquals(member.getNickname(), savedMember.getNickname());
         Assertions.assertEquals(member.getPhone(), savedMember.getPhone());
     }
 
@@ -122,7 +98,7 @@ public class MemberRepositoryTest {
     @DisplayName("회원데이터 조회")
     public void findByMemberTest() throws Exception {
         //given
-        Member member = Member.builder().name("kwon").email("gyj343@naver.com").password(passwordEncoder.encode("1234")).nickname("권군").phone("010-1111-2222").build();
+        Member member = Member.builder().name("kwon").email("gyj343@naver.com").password(passwordEncoder.encode("@%QWdiasdfnxj1")).phone("010-1111-2222").build();
 
         memberRepository.save(member);
 
@@ -135,7 +111,6 @@ public class MemberRepositoryTest {
         Assertions.assertEquals(member.getEmail(), savedMember.getEmail());
         Assertions.assertEquals(member.getName(), savedMember.getName());
         Assertions.assertEquals(member.getPassword(), savedMember.getPassword());
-        Assertions.assertEquals(member.getNickname(), savedMember.getNickname());
         Assertions.assertEquals(member.getPhone(), savedMember.getPhone());
     }
 
@@ -143,11 +118,11 @@ public class MemberRepositoryTest {
     @DisplayName("회원데이터 모두조회")
     public void findAllByMemberTest() throws Exception {
         //given
-        Member member1 = Member.builder().name("kwon").email("gyj343@naver.com").password(passwordEncoder.encode("1234")).nickname("권군").phone("010-1111-2222").build();
-        Member member2 = Member.builder().name("kim").email("kim@gmail.com").password(passwordEncoder.encode("1234")).nickname("김군").phone("010-2222-3333").build();
-        Member member3 = Member.builder().name("lee").email("lee@naver.com").password(passwordEncoder.encode("1234")).nickname("이군").phone("010-3333-4444").build();
-        Member member4 = Member.builder().name("park").email("park@naver.com").password(passwordEncoder.encode("1234")).nickname("박군").phone("010-4444-5555").build();
-        Member member5 = Member.builder().name("choi").email("choi@naver.com").password(passwordEncoder.encode("1234")).nickname("최군").phone("010-5555-6666").build();
+        Member member1 = Member.builder().name("kwon").email("gyj343@naver.com").password(passwordEncoder.encode("@%QWdiasdfnxj1")).phone("010-1111-2222").build();
+        Member member2 = Member.builder().name("kim").email("kim@gmail.com").password(passwordEncoder.encode("@%QWdiasdfnxj1")).phone("010-2222-3333").build();
+        Member member3 = Member.builder().name("lee").email("lee@naver.com").password(passwordEncoder.encode("@%QWdiasdfnxj1")).phone("010-3333-4444").build();
+        Member member4 = Member.builder().name("park").email("park@naver.com").password(passwordEncoder.encode("@%QWdiasdfnxj1")).phone("010-4444-5555").build();
+        Member member5 = Member.builder().name("choi").email("choi@naver.com").password(passwordEncoder.encode("@%QWdiasdfnxj1")).phone("010-5555-6666").build();
 
         memberRepository.save(member1);
         memberRepository.save(member2);
