@@ -141,8 +141,6 @@ public class MemberServiceTest {
                 .build();
 
         //when
-        memberService.checkEmailDuplicate(memberDto.getEmail());
-        memberService.checkPhoneDuplicate(memberDto.getPhone());
 
         Member expectMember = memberRepository.findByUserId(memberDto.getUserId()).get();
 
@@ -178,10 +176,6 @@ public class MemberServiceTest {
                 .phone("010-4442-5570")
                 .address(addressDto)
                 .build();
-
-        memberService.checkEmailDuplicate(memberDto.getEmail());
-        memberService.checkPhoneDuplicate(memberDto.getPhone());
-        memberService.checkUserIdDuplicate(memberDto.getUserId());
 
         memberService.create(memberDto);
 
