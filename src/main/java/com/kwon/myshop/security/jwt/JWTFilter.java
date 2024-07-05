@@ -38,6 +38,10 @@ public class JWTFilter extends OncePerRequestFilter {
             return true;
         }
 
+        if (path.startsWith("/items/")) {
+            return true;
+        }
+
         return false;
     }
 
