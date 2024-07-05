@@ -28,8 +28,4 @@ public class Reply extends BaseEntity {
     private Item item;
 
     private String content;
-
-    private LocalDate regDate;
-
-    private LocalDate modDate;
 }
