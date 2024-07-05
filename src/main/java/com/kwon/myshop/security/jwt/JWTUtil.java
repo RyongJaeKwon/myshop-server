@@ -22,9 +22,9 @@ public class JWTUtil {
     private final int accessTokenExpirationMinutes;
     private final int refreshTokenExpirationMinutes;
 
-    public JWTUtil(@Value("${jwt.secret-key}") String key,
-                   @Value("${jwt.access-token-expiration-minutes}") int accessTokenExpirationMinutes,
-                   @Value("${jwt.refresh-token-expiration-minutes}") int refreshTokenExpirationMinutes) {
+    public JWTUtil(@Value("${spring.jwt.secret-key}") String key,
+                   @Value("${spring.jwt.access-token-expiration-minutes}") int accessTokenExpirationMinutes,
+                   @Value("${spring.jwt.refresh-token-expiration-minutes}") int refreshTokenExpirationMinutes) {
         if (key == null || key.isEmpty()) {
             throw new IllegalArgumentException("JWT secret key is not found");
         }
