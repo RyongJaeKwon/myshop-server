@@ -1,7 +1,7 @@
 package com.kwon.myshop.controller;
 
 import com.kwon.myshop.dto.ItemDto;
-import com.kwon.myshop.file.FileUil;
+import com.kwon.myshop.file.FileUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -18,13 +18,13 @@ import java.util.Map;
 @RequestMapping("/items")
 public class ItemController {
 
-    private final FileUil fileUil;
+    private final FileUtil fileUtil;
 
     @PostMapping("/")
     public Map<String, String> create(ItemDto itemDto) {
 
         List<MultipartFile> files = itemDto.getFiles();
-        List<String> uploadFileNames = fileUil.addFiles(files);
+        List<String> uploadFileNames = fileUtil.addFiles(files);
 
         ItemDto savedItemDto = ItemDto.builder()
                 .uploadFileNames(uploadFileNames)
@@ -37,7 +37,7 @@ public class ItemController {
 
     @GetMapping("/view/{fileName}")
     public ResponseEntity<Resource> GetOneFile(@PathVariable String fileName) {
-        return fileUil.getFile(fileName);
+        return fileUtil.getFile(fileName);
     }
 
 }
