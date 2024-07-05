@@ -16,12 +16,11 @@ public class MemberDetails extends User {
     private String userId;
     private String email;
     private String name;
-    private String nickname;
     private String phone;
     private String role;
     private Address address;
 
-    public MemberDetails(Long id, String userId, String password, String email, String name, String nickname, String phone,
+    public MemberDetails(Long id, String userId, String password, String email, String name, String phone,
                          Address address, String role) {
         super(userId, password, Collections.singletonList(new SimpleGrantedAuthority(role)));
 
@@ -29,7 +28,6 @@ public class MemberDetails extends User {
         this.userId = userId;
         this.email = email;
         this.name = name;
-        this.nickname = nickname;
         this.phone = phone;
         this.address = address;
         this.role = role;
@@ -42,7 +40,6 @@ public class MemberDetails extends User {
         valueMap.put("userId", userId);
         valueMap.put("email", email);
         valueMap.put("name", name);
-        valueMap.put("nickname", nickname);
         valueMap.put("phone", phone);
         valueMap.put("address", address);
         valueMap.put("role", role);
