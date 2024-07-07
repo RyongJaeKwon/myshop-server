@@ -29,7 +29,7 @@ public class MemberServiceTest {
     PasswordEncoder passwordEncoder;
     
     @Test
-    @DisplayName("회원가입 테스트")
+    @DisplayName("회원가입")
     public void createTest() throws Exception {
         //given
         AddressDto addressDto = AddressDto.builder()
@@ -57,7 +57,7 @@ public class MemberServiceTest {
     }
 
     @Test
-    @DisplayName("회원가입 실패테스트")
+    @DisplayName("회원가입 실패")
     public void createFailTest() throws Exception {
         //given
         AddressDto addressDto = AddressDto.builder()
@@ -85,7 +85,7 @@ public class MemberServiceTest {
     }
 
     @Test
-    @DisplayName("회원조회 테스트")
+    @DisplayName("회원조회")
     public void getTest() throws Exception {
         //given
         AddressDto addressDto = AddressDto.builder()
@@ -122,7 +122,7 @@ public class MemberServiceTest {
     }
 
     @Test
-    @DisplayName("회원수정 테스트")
+    @DisplayName("회원수정")
     public void updateTest() throws Exception {
         //given
         AddressDto addressDto = AddressDto.builder()
@@ -159,7 +159,7 @@ public class MemberServiceTest {
     }
 
     @Test
-    @DisplayName("회원삭제 테스트")
+    @DisplayName("회원삭제")
     public void deleteTest() throws Exception {
         //given
         AddressDto addressDto = AddressDto.builder()
