@@ -64,7 +64,7 @@ public class FileUtil {
                     Path thumbnailPath = Paths.get(uploadPath, "s_" + savedName);
 
                     Thumbnails.of(savePath.toFile())
-                            .size(300, 300)
+                            .size(500, 500)
                             .toFile(thumbnailPath.toFile());
                 }
 
