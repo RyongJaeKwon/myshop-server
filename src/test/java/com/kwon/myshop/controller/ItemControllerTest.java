@@ -2,12 +2,9 @@ package com.kwon.myshop.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kwon.myshop.domain.Member;
-import com.kwon.myshop.dto.AddressDto;
 import com.kwon.myshop.dto.ItemDto;
-import com.kwon.myshop.dto.MemberDto;
-import com.kwon.myshop.repository.ItemRepository;
 import com.kwon.myshop.service.ItemService;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,7 +25,8 @@ import java.util.UUID;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ItemController {
+@Slf4j
+public class ItemControllerTest {
     
     @Autowired
     private MockMvc mockMvc;
@@ -37,11 +35,8 @@ public class ItemController {
     private ItemService itemService;
     
     @Autowired
-    private ItemRepository itemRepository;
-    
-    @Autowired
     private ObjectMapper objectMapper;
-    
+
     @Test
     @DisplayName("회원가입")
     @Transactional
@@ -74,6 +69,7 @@ public class ItemController {
         Long createItemId = map.get("RESULT");
 
         ItemDto savedItemDto = itemService.getItemWithImages(createItemId);
+
         Assertions.assertNotNull(savedItemDto);
         Assertions.assertEquals(createItemDto.getItemName(), savedItemDto.getItemName());
         Assertions.assertEquals(createItemDto.getColor(), savedItemDto.getColor());
@@ -85,5 +81,4 @@ public class ItemController {
         Assertions.assertTrue(savedItemDto.getUploadFileNames().size() == 2);
 
     }
-
 }
