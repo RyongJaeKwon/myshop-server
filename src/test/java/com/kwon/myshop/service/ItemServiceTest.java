@@ -60,6 +60,7 @@ public class ItemServiceTest {
         Assertions.assertTrue(createItemDto.getUploadFileNames().size() == saveItemDto.getUploadFileNames().size());
         Assertions.assertEquals(createItemDto.getUploadFileNames().get(0), saveItemDto.getUploadFileNames().get(0));
         Assertions.assertEquals(createItemDto.getUploadFileNames().get(1), saveItemDto.getUploadFileNames().get(1));
+        Assertions.assertTrue(saveItemDto.getUploadFileNames().size() == 2);
     }
 
     @Test
