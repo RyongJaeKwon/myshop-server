@@ -144,7 +144,6 @@ public class ItemService {
                 .category(itemDto.getCategory())
                 .build();
 
-
         List<String> uploadFileNames = itemDto.getUploadFileNames();
 
         if (uploadFileNames != null && !uploadFileNames.isEmpty()) {
