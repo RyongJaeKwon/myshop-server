@@ -25,8 +25,8 @@ public class ItemController {
     private final FileUtil fileUtil;
     private final ItemService itemService;
 
-    @PostMapping("/")
-    public Map<String, Long> create(@RequestBody ItemDto itemDto) {
+    @PostMapping(value = "/")
+    public Map<String, Long> create(ItemDto itemDto) {
         List<MultipartFile> files = itemDto.getFiles();
         List<String> uploadFileNames = fileUtil.addFiles(files);
 
