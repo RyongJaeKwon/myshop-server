@@ -12,7 +12,7 @@ import lombok.Getter;
 public class AddressDto {
 
     @NotBlank(message = "우편번호를 입력해주세요")
-    @Pattern(regexp = "^[0-9]{0,5}$", message = "숫자만 입력할 수 있습니다")
+    @Pattern(regexp = "^\\d{5}$", message = "숫자만 입력할 수 있습니다")
     private String postcode;
 
     @NotBlank(message = "기본 주소를 입력해주세요")
