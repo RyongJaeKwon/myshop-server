@@ -27,6 +27,7 @@ public class ItemController {
 
     @PostMapping(value = "/")
     public Map<String, Long> create(ItemDto itemDto) {
+        log.info("ItemDto: " + itemDto);
         List<MultipartFile> files = itemDto.getFiles();
         List<String> uploadFileNames = fileUtil.addFiles(files);
 
@@ -38,7 +39,7 @@ public class ItemController {
                 .brand(itemDto.getBrand())
                 .price(itemDto.getPrice())
                 .category(itemDto.getCategory())
-                .uploadFileNames(uploadFileNames.size() > 0 ? uploadFileNames : itemDto.getUploadFileNames())
+                .uploadFileNames(uploadFileNames)
                 .build();
 
         log.info("createItemDto : " + createItemDto);
@@ -48,8 +49,8 @@ public class ItemController {
     }
 
     @GetMapping("/")
-    public PageResponseDto<ItemDto> list(PageRequestDto pageRequestDto) {
-        return itemService.getRecentItems(pageRequestDto);
+    public List<ItemDto> list() {
+        return itemService.getRecentItems();
     }
 
     @GetMapping("/{category}")
