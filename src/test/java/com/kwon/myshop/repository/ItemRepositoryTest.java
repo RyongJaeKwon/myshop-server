@@ -1,6 +1,8 @@
 package com.kwon.myshop.repository;
 
 import com.kwon.myshop.domain.Item;
+import com.kwon.myshop.domain.ItemImage;
+import com.kwon.myshop.dto.ItemDto;
 import com.kwon.myshop.exception.ItemNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @SpringBootTest
 @Slf4j
@@ -277,17 +280,34 @@ public class ItemRepositoryTest {
             itemRepository.save(item);
         }
 
-        Pageable pageable = PageRequest.of(0, 10);
+        Pageable pageable = PageRequest.of(0, 12);
 
         //when
-        Page<Object[]> itemList = itemRepository.findRecentItemList(pageable);
-        itemList.getContent().forEach(items -> log.info(Arrays.toString(items)));
+        List<Object[]> result = itemRepository.findRecentItemsWithImages(pageable);
+        List<ItemDto> dtoList = result.stream().map(res -> {
+            Item item = (Item) res[0];
+            ItemImage itemImage = (ItemImage) res[1];
 
-        List<Object[]> result = itemList.getContent();
+            ItemDto itemDto = ItemDto.builder()
+                    .id(item.getId())
+                    .itemName(item.getItemName())
+                    .color(item.getColor())
+                    .size(item.getSize())
+                    .itemInfo(item.getItemInfo())
+                    .brand(item.getBrand())
+                    .price(item.getPrice())
+                    .category(item.getCategory())
+                    .uploadFileNames(List.of(itemImage.getFileName()))
+                    .regDate(item.getRegDate())
+                    .modDate(item.getModDate())
+                    .build();
+
+            return itemDto;
+        }).collect(Collectors.toList());
 
         //then
-        Assertions.assertFalse(itemList.isEmpty());
-        Assertions.assertTrue(itemList.getSize() == 10);
+        Assertions.assertFalse(dtoList.isEmpty());
+        Assertions.assertTrue(dtoList.size() == 12);
 
         // 내림차순 검증
         LocalDateTime previousRegDate = null;
