@@ -21,7 +21,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 @Slf4j
 public class ItemService {
@@ -29,7 +29,10 @@ public class ItemService {
     private final ItemRepository itemRepository;
 
     public Long create(ItemDto itemDto) {
-        Item savedItem = itemRepository.save(dtoToEntity(itemDto));
+        Item item = dtoToEntity(itemDto);
+        log.info("Item.getImageList : " + item.getImageList());
+        Item savedItem = itemRepository.save(item);
+
         return savedItem.getId();
     }
 
@@ -64,13 +67,11 @@ public class ItemService {
         return entityToDto(item);
     }
 
-    public PageResponseDto<ItemDto> getRecentItems(PageRequestDto pageRequestDto) {
-        Pageable pageable = PageRequest.of(pageRequestDto.getPage() - 1, pageRequestDto.getSize());
-        Page<Object[]> result = itemRepository.findRecentItemList(pageable);
+    public List<ItemDto> getRecentItems() {
+        Pageable pageable = PageRequest.of(0, 6);
+        List<Object[]> result = itemRepository.findRecentItemsWithImages(pageable);
 
-        int totalPages = result.getTotalPages();
-
-        List<ItemDto> dtoList = result.get().map(res -> {
+        List<ItemDto> dtoList = result.stream().map(res -> {
             Item item = (Item) res[0];
             ItemImage itemImage = (ItemImage) res[1];
 
@@ -91,11 +92,7 @@ public class ItemService {
             return itemDto;
         }).collect(Collectors.toList());
 
-        return PageResponseDto.<ItemDto>builder()
-                .dtoList(dtoList)
-                .pageRequestDto(pageRequestDto)
-                .totalPages(totalPages)
-                .build();
+        return dtoList;
     }
 
     public PageResponseDto<ItemDto> getRecentItemsWithCategory(PageRequestDto pageRequestDto, String category) {
