@@ -184,14 +184,14 @@ public class ItemServiceTest {
         }
 
         //when
-        PageResponseDto<ItemDto> result = itemService.getRecentItems(PageRequestDto.builder().page(1).size(10).build());
-        result.getDtoList().forEach(dto -> log.info(dto.toString()));
+        List<ItemDto> result = itemService.getRecentItems();
+        result.forEach(dto -> log.info(dto.toString()));
 
-        List<ItemDto> dtoList = result.getDtoList();
+        List<ItemDto> dtoList = result;
 
         //then
         Assertions.assertFalse(dtoList.isEmpty());
-        Assertions.assertTrue(dtoList.size() == 10);
+        Assertions.assertTrue(dtoList.size() == 12);
 
         for (ItemDto itemDto : dtoList) {
             Assertions.assertNotNull(itemDto.getRegDate());
