@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
@@ -28,7 +29,9 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     /**
      * 메인화면에서 모든 카테고리 포함 가장 최근에 등록된 아이템의 대표이미지(ord = 0)만 페이징해서 가져오기
      */
-    @Query("select i, ii from Item i left join i.imageList ii where ii.ord = 0 order by i.regDate desc")
-    Page<Object[]> findRecentItemList(Pageable pageable);
+    @Query("select i, ii from Item i left join i.imageList ii " +
+            "where ii.ord = 0 " +
+            "order by i.regDate desc")
+    List<Object[]> findRecentItemsWithImages(Pageable pageable);
 
 }
