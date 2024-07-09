@@ -64,7 +64,7 @@ public class FileUtil {
                     Path thumbnailPath = Paths.get(uploadPath, "s_" + savedName);
 
                     Thumbnails.of(savePath.toFile())
-                            .size(500, 500)
+                            .size(300, 400)
                             .toFile(thumbnailPath.toFile());
                 }
 
@@ -73,7 +73,7 @@ public class FileUtil {
                 throw new RuntimeException(e.getMessage());
             }
         }
-
+        log.info("addFiles uploadName : " + uploadNames);
         return uploadNames;
     }
 
