@@ -53,17 +53,17 @@ public class ItemController {
         return itemService.getRecentItems();
     }
 
-    @GetMapping("/{category}")
+    @GetMapping("/{category}/list")
     public PageResponseDto<ItemDto> categoryList(PageRequestDto pageRequestDto, @PathVariable String category) {
         return itemService.getRecentItemsWithCategory(pageRequestDto, category);
     }
 
-    @GetMapping("/{id}")
-    public ItemDto read(@PathVariable Long id) {
+    @GetMapping("/{category}/{id}")
+    public ItemDto read(@PathVariable String category, @PathVariable Long id) {
         return itemService.getItemWithImages(id);
     }
 
-    @PutMapping("/")
+    @PutMapping("/{category}/{id}")
     public Map<String, String> update(@RequestBody ItemDto itemDto) {
         try {
             ItemDto savedItemDto = itemService.getItemWithImages(itemDto.getId());
