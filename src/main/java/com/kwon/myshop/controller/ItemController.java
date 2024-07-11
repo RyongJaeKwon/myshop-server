@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -25,7 +26,7 @@ public class ItemController {
     private final FileUtil fileUtil;
     private final ItemService itemService;
 
-    @PostMapping(value = "/")
+    @PostMapping("/")
     public Map<String, Long> create(ItemDto itemDto) {
         log.info("ItemDto: " + itemDto);
         List<MultipartFile> files = itemDto.getFiles();
@@ -58,26 +59,42 @@ public class ItemController {
         return itemService.getRecentItemsWithCategory(pageRequestDto, category);
     }
 
-    @GetMapping("/{category}/{id}")
-    public ItemDto read(@PathVariable String category, @PathVariable Long id) {
+    @GetMapping("/{id}")
+    public ItemDto read(@PathVariable Long id) {
         return itemService.getItemWithImages(id);
     }
 
-    @PutMapping("/{category}/{id}")
-    public Map<String, String> update(@RequestBody ItemDto itemDto) {
+    @PutMapping("/{id}")
+    public Map<String, String> update(@PathVariable Long id, ItemDto itemDto) {
         try {
-            ItemDto savedItemDto = itemService.getItemWithImages(itemDto.getId());
+            ItemDto savedItemDto = itemService.getItemWithImages(id);
             List<String> savedUploadFileNames = savedItemDto.getUploadFileNames();
 
             List<MultipartFile> files = itemDto.getFiles();
             List<String> recentUploadFileNames = fileUtil.addFiles(files);
-            List<String> uploadFileNames = itemDto.getUploadFileNames();
+
+            List<String> uploadFileNames = itemDto.getUploadFileNames() != null ? itemDto.getUploadFileNames() : new ArrayList<>();
 
             if (recentUploadFileNames != null && !recentUploadFileNames.isEmpty()) {
                 uploadFileNames.addAll(recentUploadFileNames);
             }
 
-            itemService.update(itemDto);
+            ItemDto updateItemDto = ItemDto.builder()
+                    .id(itemDto.getId())
+                    .itemName(itemDto.getItemName())
+                    .color(itemDto.getColor())
+                    .size(itemDto.getSize())
+                    .itemInfo(itemDto.getItemInfo())
+                    .brand(itemDto.getBrand())
+                    .price(itemDto.getPrice())
+                    .category(itemDto.getCategory())
+                    .uploadFileNames(uploadFileNames)
+                    .build();
+
+            log.info("updateItemDto: " + updateItemDto);
+            log.info("recentUploadFileNames: " + recentUploadFileNames);
+
+            itemService.update(updateItemDto);
 
             if (savedUploadFileNames != null && !savedUploadFileNames.isEmpty()) {
                 List<String> deleteFiles = savedUploadFileNames.stream()
