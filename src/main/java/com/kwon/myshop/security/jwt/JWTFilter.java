@@ -29,7 +29,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
         String path = request.getRequestURI();
 
-        log.info("URI check------" + path);
+        log.info("URI check : " + path);
 
         /**
          * /member/ 경로 호출은 체크 x
