@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,6 +27,7 @@ public class ItemController {
     private final FileUtil fileUtil;
     private final ItemService itemService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/")
     public Map<String, Long> create(ItemDto itemDto) {
         log.info("ItemDto: " + itemDto);
@@ -64,6 +66,7 @@ public class ItemController {
         return itemService.getItemWithImages(id);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public Map<String, String> update(@PathVariable Long id, ItemDto itemDto) {
         try {
@@ -115,6 +118,7 @@ public class ItemController {
         return fileUtil.getFile(fileName);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public Map<String, String> delete(@PathVariable Long id) {
         List<String> savedUploadFileNames = itemService.getItemWithImages(id).getUploadFileNames();
