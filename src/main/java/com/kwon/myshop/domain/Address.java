@@ -7,7 +7,8 @@ import lombok.*;
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
+@ToString
 public class Address {
 
     private String postcode;            // 우편번호
