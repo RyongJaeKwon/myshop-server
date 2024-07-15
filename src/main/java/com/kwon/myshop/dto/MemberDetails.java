@@ -14,18 +14,20 @@ public class MemberDetails extends User {
 
     private Long id;
     private String userId;
+    private String password;
     private String email;
     private String name;
     private String phone;
     private String role;
-    private Address address;
+    private Address address = new Address();
 
     public MemberDetails(Long id, String userId, String password, String email, String name, String phone,
                          Address address, String role) {
-        super(userId, password, Collections.singletonList(new SimpleGrantedAuthority(role)));
+        super(userId, "", Collections.singletonList(new SimpleGrantedAuthority(role)));
 
         this.id = id;
         this.userId = userId;
+        this.password = password;
         this.email = email;
         this.name = name;
         this.phone = phone;
