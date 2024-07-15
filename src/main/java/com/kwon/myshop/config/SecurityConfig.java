@@ -1,5 +1,6 @@
 package com.kwon.myshop.config;
 
+import com.kwon.myshop.security.CustomAccessDeniedHandler;
 import com.kwon.myshop.security.CustomLoginFailHandler;
 import com.kwon.myshop.security.CustomLoginSuccessHandler;
 import com.kwon.myshop.security.jwt.JWTFilter;
@@ -29,6 +30,7 @@ public class SecurityConfig {
     private final CustomLoginSuccessHandler customLoginSuccessHandler;
     private final CustomLoginFailHandler customLoginFailHandler;
     private final JWTFilter jwtFilter;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -47,6 +49,10 @@ public class SecurityConfig {
             config.failureHandler(customLoginFailHandler);
         });
 
+        http.exceptionHandling(config -> {
+            config.accessDeniedHandler(customAccessDeniedHandler);
+        });
+
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -59,7 +65,7 @@ public class SecurityConfig {
 
         configuration.setAllowedOriginPatterns(Arrays.asList("*"));
         configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "X-Refresh-Token", "Content-Type"));
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
