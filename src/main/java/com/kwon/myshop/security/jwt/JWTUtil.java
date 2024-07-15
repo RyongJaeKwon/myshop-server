@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,7 @@ import java.util.Date;
 import java.util.Map;
 
 @Component
+@Slf4j
 public class JWTUtil {
 
     private final SecretKey secretKey;
@@ -63,17 +65,52 @@ public class JWTUtil {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (MalformedJwtException e) {
-            throw new MyshopJWTException("잘못된 JWT 서명입니다.");
+            throw new MyshopJWTException("잘못된 JWT 서명입니다");
         } catch (ExpiredJwtException e) {
-            throw new MyshopJWTException("만료된 JWT 토큰입니다.");
+            throw new MyshopJWTException("만료된 JWT 토큰입니다");
         } catch (UnsupportedJwtException e) {
-            throw new MyshopJWTException("지원하지 않는 JWT 토큰입니다.");
+            throw new MyshopJWTException("지원하지 않는 JWT 토큰입니다");
         } catch (IllegalArgumentException e) {
-            throw new MyshopJWTException("JWT 토큰이 잘못되었습니다.");
+            throw new MyshopJWTException("JWT 토큰이 잘못되었습니다");
         } catch (Exception e) {
             throw new MyshopJWTException("Error");
         }
 
         return claims;
     }
+
+    public boolean isAccessTokenExpired(String accessToken) {
+
+        try {
+            validateToken(accessToken);
+            return false;
+        } catch (MyshopJWTException e) {
+            if (e.getMessage().equals("만료된 JWT 토큰입니다")) {
+                return true;
+            } else {
+                throw e;
+            }
+        }
+    }
+
+    public Map<String, Object> isRefreshTokenExpired(String refreshToken) {
+
+        Map<String, Object> claims = validateToken(refreshToken);
+        String newAccessToken = createAccessToken(claims);
+        Object expObject = claims.get("exp");
+
+        if (expObject instanceof Integer) {
+            Integer expValue = (Integer) expObject;
+            Date expiration = new Date(expValue * 1000L);
+            Date now = new Date();
+
+            if (expiration.getTime() - now.getTime() <= 10 * 60 * 1000) {
+                String newRefreshToken = createRefreshToken(claims);
+                return Map.of("accessToken", newAccessToken, "refreshToken", newRefreshToken);
+            }
+        }
+
+        return Map.of("accessToken", newAccessToken, "refreshToken", refreshToken);
+    }
+
 }
