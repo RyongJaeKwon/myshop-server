@@ -46,6 +46,10 @@ public class JWTFilter extends OncePerRequestFilter {
             return true;
         }
 
+        if (request.getRequestURI().matches("^/items/[^/]+/list$")) {
+            return true;
+        }
+
         return false;
     }
 
