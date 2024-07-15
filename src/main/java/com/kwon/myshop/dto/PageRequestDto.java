@@ -2,7 +2,6 @@ package com.kwon.myshop.dto;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.experimental.SuperBuilder;
 
 @Getter
 @Builder
