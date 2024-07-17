@@ -27,20 +27,18 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Transactional
     public void create(MemberDto memberDto) {
 
         signup(memberDto);
     }
 
-    @Transactional
     public void update(MemberDto memberDto) {
 
         edit(memberDto);
     }
 
-    public MemberResponse get(Long id) {
-        Member member = memberRepository.findById(id).orElseThrow(() -> new MemberNotFoundException());
+    public MemberResponse get(String userId) {
+        Member member = memberRepository.findByUserId(userId).orElseThrow(() -> new MemberNotFoundException());
 
         return MemberResponse.entityToDto(member);
     }
