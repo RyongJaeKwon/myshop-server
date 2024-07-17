@@ -24,9 +24,10 @@ public class CustomLoginFailHandler implements AuthenticationFailureHandler {
         log.info("--------------------onAuthenticationFail----------------------");
 
         Gson gson = new Gson();
-        String json = gson.toJson(Map.of("error", "ERROR_LOGIN", "msg", exception.getMessage()));
+        String json = gson.toJson(Map.of("error", "ERROR_LOGIN"));
 
         response.setContentType("application/json; charset=UTF-8");
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
 
         response.getWriter().write(json);
     }
