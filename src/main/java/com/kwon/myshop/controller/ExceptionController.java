@@ -1,5 +1,6 @@
 package com.kwon.myshop.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kwon.myshop.dto.ErrorResponse;
 import com.kwon.myshop.exception.MyshopException;
 import lombok.extern.slf4j.Slf4j;
@@ -61,6 +62,21 @@ public class ExceptionController {
 
         return ResponseEntity
                 .status(e.getStatusCode())
+                .body(errorResponse);
+    }
+
+    @ExceptionHandler(JsonProcessingException.class)
+    public ResponseEntity<ErrorResponse> jsonProcessingException(JsonProcessingException e) {
+        log.error("JsonProcessingException: ", e);
+
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .code(HttpStatus.BAD_REQUEST.toString())
+                .message("JSON 처리에 실패했습니다")
+                .validation(Map.of())
+                .build();
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
                 .body(errorResponse);
     }
 
