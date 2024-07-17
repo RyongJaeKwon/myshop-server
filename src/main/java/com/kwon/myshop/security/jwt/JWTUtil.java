@@ -28,7 +28,7 @@ public class JWTUtil {
                    @Value("${spring.jwt.access-token-expiration-minutes}") int accessTokenExpirationMinutes,
                    @Value("${spring.jwt.refresh-token-expiration-minutes}") int refreshTokenExpirationMinutes) {
         if (key == null || key.isEmpty()) {
-            throw new IllegalArgumentException("JWT secret key is not found");
+            throw new MyshopJWTException("비밀키를 찾을 수 없습니다");
         }
         this.secretKey = Keys.hmacShaKeyFor(key.getBytes(StandardCharsets.UTF_8));
         this.accessTokenExpirationMinutes = accessTokenExpirationMinutes;
