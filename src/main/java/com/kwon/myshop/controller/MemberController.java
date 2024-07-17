@@ -34,9 +34,9 @@ public class MemberController {
         return memberService.duplicateEmailCheck(email);
     }
 
-    @GetMapping("/{id}")
-    public MemberResponse get(@PathVariable Long id) {
-        return memberService.get(id);
+    @GetMapping("/{userId}")
+    public MemberResponse get(@PathVariable String userId) {
+        return memberService.get(userId);
     }
 
     @PutMapping("/")
