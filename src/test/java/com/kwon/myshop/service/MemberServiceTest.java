@@ -108,7 +108,7 @@ public class MemberServiceTest {
         Member savedMember = memberRepository.findByUserId(memberDto.getUserId()).get();
 
         //when
-        MemberResponse memberResponse = memberService.get(savedMember.getId());
+        MemberResponse memberResponse = memberService.get(savedMember.getUserId());
 
         //then
         Assertions.assertNotNull(memberResponse);
@@ -186,7 +186,7 @@ public class MemberServiceTest {
 
         //then
         Assertions.assertThrows(MemberNotFoundException.class, () -> {
-            memberService.get(savedMember.getId());
+            memberService.get(savedMember.getUserId());
         });
 
 
