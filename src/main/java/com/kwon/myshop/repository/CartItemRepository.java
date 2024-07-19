@@ -11,7 +11,7 @@ import java.util.List;
 public interface CartItemRepository extends JpaRepository<CartItem, Long> {
 
     @Query("select " +
-            "new com.kwon.myshop.dto.CartItemListDto(ci.id, i.id, i.itemName, i.price, ci.quantity, ii.fileName) " +
+            "new com.kwon.myshop.dto.CartItemListDto(ci.id, i.id, i.itemName, i.color, i.size, i.price, ci.quantity, ii.fileName) " +
             "from " +
             "CartItem ci inner join Cart c on ci.cart = c " +
             "left join Item i on ci.item = i " +
@@ -39,7 +39,7 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
     Long getCartByCartItemId(@Param("cartItemId") Long cartItemId);
 
     @Query("select " +
-            "new com.kwon.myshop.dto.CartItemListDto(ci.id, i.id, i.itemName, i.price, ci.quantity, ii.fileName) " +
+            "new com.kwon.myshop.dto.CartItemListDto(ci.id, i.id, i.itemName,i.color, i.size, i.price, ci.quantity, ii.fileName) " +
             "from " +
             "CartItem ci inner join Cart c on ci.cart = c " +
             "left join Item i on ci.item = i " +
