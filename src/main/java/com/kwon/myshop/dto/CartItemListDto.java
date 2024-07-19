@@ -14,6 +14,8 @@ public class CartItemListDto {
     private Long cartItemId;
     private Long itemId;
     private String itemName;
+    private String color;
+    private String size;
     private int price;
     private int quantity;
     private String imageUrl;
