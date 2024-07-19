@@ -6,6 +6,7 @@ import com.kwon.myshop.domain.Item;
 import com.kwon.myshop.domain.Member;
 import com.kwon.myshop.dto.CartItemDto;
 import com.kwon.myshop.dto.CartItemListDto;
+import com.kwon.myshop.exception.InvalidQuantityException;
 import com.kwon.myshop.exception.ItemNotFoundException;
 import com.kwon.myshop.exception.MemberNotFoundException;
 import com.kwon.myshop.repository.CartItemRepository;
@@ -39,6 +40,9 @@ public class CartService {
         CartItem cartItem = cartItemRepository.getCartItemByItemId(userId, itemId);
 
         if (cartItem != null) {
+            if (quantity < 1) {
+                throw new InvalidQuantityException();
+            }
             cartItem.changeQuantity(quantity);
         } else {
             Item item = itemRepository.findById(itemId).orElseThrow(ItemNotFoundException::new);
