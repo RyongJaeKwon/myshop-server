@@ -6,12 +6,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface ItemRepository extends JpaRepository<Item, Long> {
+public interface ItemRepository extends JpaRepository<Item, Long>, QuerydslPredicateExecutor<Item> {
 
     /**
      * 해당 카테고리의 아이템 엔티티와 연관된 imageList를 Eager로딩 한다
