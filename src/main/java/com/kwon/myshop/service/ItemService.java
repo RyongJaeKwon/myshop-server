@@ -2,11 +2,13 @@ package com.kwon.myshop.service;
 
 import com.kwon.myshop.domain.Item;
 import com.kwon.myshop.domain.ItemImage;
+import com.kwon.myshop.domain.QItem;
 import com.kwon.myshop.dto.ItemDto;
 import com.kwon.myshop.dto.PageRequestDto;
 import com.kwon.myshop.dto.PageResponseDto;
 import com.kwon.myshop.exception.ItemNotFoundException;
 import com.kwon.myshop.repository.ItemRepository;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -121,6 +123,24 @@ public class ItemService {
 
             return itemDto;
         }).collect(Collectors.toList());
+
+        return PageResponseDto.<ItemDto>builder()
+                .dtoList(dtoList)
+                .pageRequestDto(pageRequestDto)
+                .totalPages(totalPages)
+                .build();
+    }
+
+    public PageResponseDto<ItemDto> searchItemList(PageRequestDto pageRequestDto) {
+        Pageable pageable = PageRequest.of(pageRequestDto.getPage() - 1, pageRequestDto.getSize());
+
+        QItem item = QItem.item;
+        BooleanExpression expression = item.itemName.containsIgnoreCase(pageRequestDto.getKeyword());
+
+        Page<Item> result = itemRepository.findAll(expression, pageable);
+
+        int totalPages = result.getTotalPages();
+        List<ItemDto> dtoList = result.stream().map(this::entityToDto).collect(Collectors.toList());
 
         return PageResponseDto.<ItemDto>builder()
                 .dtoList(dtoList)
