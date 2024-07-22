@@ -12,10 +12,6 @@ public class MemberUpdate {
     @NotBlank(message = "아이디를 입력해주세요")
     private String userId;
 
-    @NotBlank(message = "비밀번호를 입력해주세요")
-    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,20}$",  message = "올바르지 않는 형식입니다")    // 최소 8~20자, 대문자 1개, 소문자 1개, 숫자 1개, 특수문자 1개 포함
-    private String password;
-
     @NotBlank(message = "이름을 입력해주세요")
     @Pattern(regexp = "^[가-힣]{1,10}$", message = "올바르지 않는 형식입니다")
     private String name;
@@ -32,7 +28,6 @@ public class MemberUpdate {
     @Builder
     public MemberUpdate(String userId, String password, String name, String phone, AddressDto address, String role) {
         this.userId = userId.replaceAll("\\s", "");
-        this.password = password.replaceAll("\\s", "");
         this.name = name.replaceAll("\\s", "");
         this.phone = phone.replaceAll("\\s", "");
         if (address != null) {
