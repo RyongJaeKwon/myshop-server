@@ -7,7 +7,6 @@ import com.kwon.myshop.domain.Member;
 import com.kwon.myshop.domain.Role;
 import com.kwon.myshop.dto.MemberDetails;
 import com.kwon.myshop.dto.MemberUpdate;
-import com.kwon.myshop.exception.MemberNotFoundException;
 import com.kwon.myshop.exception.MyshopJWTException;
 import com.kwon.myshop.repository.MemberRepository;
 import com.kwon.myshop.security.jwt.JWTUtil;
@@ -17,7 +16,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -36,7 +34,6 @@ import java.util.Optional;
 public class KakaoService {
 
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
     private final JWTUtil jwtUtil;
 
     public Map<String, Object> getKakaoMember(String accessToken) {
@@ -126,7 +123,6 @@ public class KakaoService {
     public Member DtoToEntity(MemberUpdate memberUpdate) {
         return Member.builder()
                 .userId(memberUpdate.getUserId())
-                .password(passwordEncoder.encode(memberUpdate.getPassword()))
                 .name(memberUpdate.getName())
                 .phone(memberUpdate.getPhone())
                 .address(Address.builder()
