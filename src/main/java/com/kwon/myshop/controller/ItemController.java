@@ -127,4 +127,10 @@ public class ItemController {
         return Map.of("RESULT", "SUCCESS");
     }
 
+    @GetMapping("/search")
+    public PageResponseDto<ItemDto> searchItemList(PageRequestDto pageRequestDto) {
+
+        return itemService.searchItemList(pageRequestDto);
+    }
+
 }
