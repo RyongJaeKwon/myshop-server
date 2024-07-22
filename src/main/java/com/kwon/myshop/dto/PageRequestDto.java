@@ -12,4 +12,6 @@ public class PageRequestDto {
 
     @Builder.Default
     private int size = 6;
+
+    private String keyword;
 }
