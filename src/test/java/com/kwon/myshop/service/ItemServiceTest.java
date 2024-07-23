@@ -276,4 +276,68 @@ public class ItemServiceTest {
         }
     }
 
+    @Test
+    @DisplayName("키워드로 아이템 검색")
+    @Transactional
+    public void searchItemListTest() throws Exception {
+        //given
+        String[] categories = {"top", "bottom", "hat", "acc", "shoes", "outer", "bag"};
+        String[] colors = {"black", "gray", "white", "navy"};
+        String[] sizes = {"small", "medium", "large", "xlarge"};
+        String[] brands = {"nike", "adidas", "new balance", "champion", "yale"};
+        int[] prices = {10000, 15000, 20000, 25000, 30000};
+
+
+        Random random = new Random();
+        Map<String, Integer> itemCountMap = new HashMap<>();
+        int MAX_ITEMS_PER_CATEGORY = 3;
+
+        for (int i = 0; i < 15; i++) {
+            String category;
+
+            do {
+                category = categories[random.nextInt(categories.length)];
+            } while (itemCountMap.getOrDefault(category, 0) >= MAX_ITEMS_PER_CATEGORY);
+
+            itemCountMap.put(category, itemCountMap.getOrDefault(category, 0) + 1);
+
+            String color = colors[random.nextInt(colors.length)];
+            String size = sizes[random.nextInt(sizes.length)];
+            String brand = brands[random.nextInt(brands.length)];
+            int price = prices[random.nextInt(prices.length)];
+
+            ItemDto itemDto = ItemDto.builder()
+                    .itemName("아이템" + i)
+                    .itemInfo("아이템 정보" + i)
+                    .price(price)
+                    .category(category)
+                    .color(color)
+                    .size(size)
+                    .brand(brand)
+                    .uploadFileNames(List.of(UUID.randomUUID().toString() + "_" + "Test1.jpg",
+                            UUID.randomUUID().toString() + "_" + "Test2.jpg"))
+                    .build();
+
+
+            itemService.create(itemDto);
+        }
+
+        //when
+        PageRequestDto pageRequestDto = PageRequestDto.builder()
+                .page(1)
+                .size(6)
+                .keyword("아이템1")
+                .build();
+
+        PageResponseDto<ItemDto> pageResponseDto = itemService.searchItemList(pageRequestDto);
+
+        //then
+        Assertions.assertFalse(pageResponseDto.getDtoList().isEmpty());
+
+        for (ItemDto itemDto : pageResponseDto.getDtoList()) {
+            log.info(String.valueOf(itemDto));
+            Assertions.assertTrue(itemDto.getItemName().contains("아이템1"));
+        }
+    }
+
 }
