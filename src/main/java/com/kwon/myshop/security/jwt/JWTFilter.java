@@ -50,6 +50,10 @@ public class JWTFilter extends OncePerRequestFilter {
             return true;
         }
 
+        if (request.getRequestURI().matches("/items/search")) {
+            return true;
+        }
+
         return false;
     }
 
