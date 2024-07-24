@@ -3,11 +3,14 @@ package com.kwon.myshop.service;
 import com.kwon.myshop.domain.Item;
 import com.kwon.myshop.domain.ItemImage;
 import com.kwon.myshop.domain.QItem;
+import com.kwon.myshop.domain.Reply;
 import com.kwon.myshop.dto.ItemDto;
 import com.kwon.myshop.dto.PageRequestDto;
 import com.kwon.myshop.dto.PageResponseDto;
+import com.kwon.myshop.dto.ReplyDto;
 import com.kwon.myshop.exception.ItemNotFoundException;
 import com.kwon.myshop.repository.ItemRepository;
+import com.kwon.myshop.repository.ReplyRepository;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +33,8 @@ import java.util.stream.Collectors;
 public class ItemService {
 
     private final ItemRepository itemRepository;
+    private final ReplyRepository replyRepository;
+    private final ReplyService replyService;
 
     public Long create(ItemDto itemDto) {
         Item item = dtoToEntity(itemDto);
@@ -78,6 +83,9 @@ public class ItemService {
             Item item = (Item) res[0];
             ItemImage itemImage = (ItemImage) res[1];
 
+            List<Reply> replies = replyRepository.findByItemId(item.getId());
+            List<ReplyDto> replyDtos = replies.stream().map(replyService::entityToDto).collect(Collectors.toList());
+
             ItemDto itemDto = ItemDto.builder()
                     .id(item.getId())
                     .itemName(item.getItemName())
@@ -88,6 +96,7 @@ public class ItemService {
                     .price(item.getPrice())
                     .category(item.getCategory())
                     .uploadFileNames(List.of(itemImage.getFileName()))
+                    .replies(replyDtos)
                     .regDate(item.getRegDate())
                     .modDate(item.getModDate())
                     .build();
@@ -108,6 +117,9 @@ public class ItemService {
             Item item = (Item) res[0];
             ItemImage itemImage = (ItemImage) res[1];
 
+            List<Reply> replies = replyRepository.findByItemId(item.getId());
+            List<ReplyDto> replyDtos = replies.stream().map(replyService::entityToDto).collect(Collectors.toList());
+
             ItemDto itemDto = ItemDto.builder()
                     .id(item.getId())
                     .itemName(item.getItemName())
@@ -118,6 +130,7 @@ public class ItemService {
                     .price(item.getPrice())
                     .category(item.getCategory())
                     .uploadFileNames(List.of(itemImage.getFileName()))
+                    .replies(replyDtos)
                     .regDate(item.getRegDate())
                     .modDate(item.getModDate())
                     .build();
@@ -133,7 +146,7 @@ public class ItemService {
     }
 
     public PageResponseDto<ItemDto> searchItemList(PageRequestDto pageRequestDto) {
-        Pageable pageable = PageRequest.of(pageRequestDto.getPage() - 1, pageRequestDto.getSize(), Sort.by(Sort.Direction.DESC, "regdate"));
+        Pageable pageable = PageRequest.of(pageRequestDto.getPage() - 1, pageRequestDto.getSize(), Sort.by(Sort.Direction.DESC, "regDate"));
 
         QItem item = QItem.item;
         BooleanExpression expression = item.itemName.containsIgnoreCase(pageRequestDto.getKeyword());
@@ -178,6 +191,9 @@ public class ItemService {
                 .orElseGet(Collections::emptyList)
                 .stream().map(ItemImage::getFileName).collect(Collectors.toList());
 
+        List<Reply> replies = replyRepository.findByItemId(item.getId());
+        List<ReplyDto> replyDtos = replies.stream().map(replyService::entityToDto).collect(Collectors.toList());
+
         ItemDto itemDto = ItemDto.builder()
                 .id(item.getId())
                 .itemName(item.getItemName())
@@ -188,6 +204,7 @@ public class ItemService {
                 .price(item.getPrice())
                 .category(item.getCategory())
                 .uploadFileNames(fileNames)
+                .replies(replyDtos)
                 .regDate(item.getRegDate())
                 .modDate(item.getModDate())
                 .build();
