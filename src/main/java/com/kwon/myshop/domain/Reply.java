@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
-
 @Entity
 @Getter
 @Builder
@@ -28,4 +26,8 @@ public class Reply extends BaseEntity {
     private Item item;
 
     private String content;
+
+    public void changeContent(String content) {
+        this.content = content;
+    }
 }
