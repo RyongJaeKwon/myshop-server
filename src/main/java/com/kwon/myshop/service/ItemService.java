@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -132,7 +133,7 @@ public class ItemService {
     }
 
     public PageResponseDto<ItemDto> searchItemList(PageRequestDto pageRequestDto) {
-        Pageable pageable = PageRequest.of(pageRequestDto.getPage() - 1, pageRequestDto.getSize());
+        Pageable pageable = PageRequest.of(pageRequestDto.getPage() - 1, pageRequestDto.getSize(), Sort.by(Sort.Direction.DESC, "regdate"));
 
         QItem item = QItem.item;
         BooleanExpression expression = item.itemName.containsIgnoreCase(pageRequestDto.getKeyword());
