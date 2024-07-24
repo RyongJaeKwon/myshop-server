@@ -1,11 +1,16 @@
 package com.kwon.myshop.service;
 
+import com.kwon.myshop.domain.Address;
 import com.kwon.myshop.domain.Item;
+import com.kwon.myshop.domain.Member;
+import com.kwon.myshop.domain.Reply;
 import com.kwon.myshop.dto.ItemDto;
 import com.kwon.myshop.dto.PageRequestDto;
 import com.kwon.myshop.dto.PageResponseDto;
 import com.kwon.myshop.exception.ItemNotFoundException;
 import com.kwon.myshop.repository.ItemRepository;
+import com.kwon.myshop.repository.MemberRepository;
+import com.kwon.myshop.repository.ReplyRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -25,6 +30,18 @@ public class ItemServiceTest {
 
     @Autowired
     ItemRepository itemRepository;
+
+    @Autowired
+    MemberService memberService;
+
+    @Autowired
+    MemberRepository memberRepository;
+
+    @Autowired
+    ReplyService replyService;
+
+    @Autowired
+    ReplyRepository replyRepository;
 
     @Test
     @DisplayName("아이템 등록")
@@ -338,6 +355,59 @@ public class ItemServiceTest {
             log.info(String.valueOf(itemDto));
             Assertions.assertTrue(itemDto.getItemName().contains("아이템1"));
         }
+    }
+
+    @Test
+    @DisplayName("아이템과 댓글 조회")
+    @Transactional
+    public void getItemWithCommentsTest() throws Exception {
+        //given
+        Item item = Item.builder()
+                .itemName("아이템")
+                .itemInfo("아이템 정보")
+                .price(20000)
+                .category("top")
+                .color("navy")
+                .size("small")
+                .brand("nike")
+                .build();
+        item.addFileName(UUID.randomUUID().toString() + "_" + "aaa.jpg");
+        item.addFileName(UUID.randomUUID().toString() + "_" + "ddd.jpg");
+
+        Item savedItem = itemRepository.save(item);
+
+        Address address = Address.builder().postcode("12345").basic_address("서울시").detail_address("강남구").build();
+        Member member = Member.builder().name("kwon").email("kwon@naver.com").password("@!Rnjs12").phone("010-1111-2222").address(address).build();
+
+        Member savedMember = memberRepository.save(member);
+
+        Reply reply1 = Reply.builder()
+                .member(savedMember)
+                .item(savedItem)
+                .content("추천합니다")
+                .build();
+
+        Reply savedReply1 = replyRepository.save(reply1);
+
+        Reply reply2 = Reply.builder()
+                .member(savedMember)
+                .item(savedItem)
+                .content("정말 좋습니다")
+                .build();
+
+        Reply savedReply2 = replyRepository.save(reply2);
+
+        //when
+        ItemDto itemDto = itemService.getItemWithImages(savedItem.getId());
+
+        //then
+        Assertions.assertTrue(itemDto.getReplies().size() == 2);
+        Assertions.assertEquals(itemDto.getReplies().get(0).getItemId(), savedReply1.getItem().getId());
+        Assertions.assertEquals(itemDto.getReplies().get(0).getMemberId(), savedReply1.getMember().getId());
+        Assertions.assertEquals(itemDto.getReplies().get(0).getContent(), savedReply1.getContent());
+        Assertions.assertEquals(itemDto.getReplies().get(1).getItemId(), savedReply2.getItem().getId());
+        Assertions.assertEquals(itemDto.getReplies().get(1).getMemberId(), savedReply2.getMember().getId());
+        Assertions.assertEquals(itemDto.getReplies().get(1).getContent(), savedReply2.getContent());
     }
 
 }
