@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -25,14 +26,19 @@ public class ReplyController {
 
     @PutMapping("/")
     public ReplyDto update(@RequestBody ReplyDto replyDto) {
-        log.info("ReplyDto: " + replyDto);
-
         return replyService.update(replyDto);
     }
 
     @GetMapping("/{id}")
     public ReplyDto getReply(@PathVariable Long id) {
         return replyService.get(id);
+    }
+
+    @GetMapping("/item/{itemId}")
+    public List<ReplyDto> getReplyList(@PathVariable Long itemId) {
+        List<ReplyDto> replyList = replyService.getReplyList(itemId);
+        log.info("replyList: " + replyList);
+        return replyList;
     }
 
     @DeleteMapping("/{id}")
