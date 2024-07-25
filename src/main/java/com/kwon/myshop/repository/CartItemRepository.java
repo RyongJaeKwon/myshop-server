@@ -3,6 +3,7 @@ package com.kwon.myshop.repository;
 import com.kwon.myshop.domain.CartItem;
 import com.kwon.myshop.dto.CartItemListDto;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -48,4 +49,27 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
             "c.id = :id and ii.ord = 0 " +
             "order by ci.regDate desc ")
     List<CartItemListDto> getCartItemListDtoByCart(@Param("id") Long id);
+
+    @Modifying
+    @Query("update CartItem c set " +
+            "c.item.itemName = :itemName, " +
+            "c.item.color = :color, " +
+            "c.item.size = :size, " +
+            "c.item.itemInfo = :itemInfo, " +
+            "c.item.brand = :brand, " +
+            "c.item.price = :price, " +
+            "c.item.category = :category " +
+            "where c.item.id = :itemId")
+    void updateCartItemsByItemId(@Param("itemId") Long itemId,
+                                 @Param("itemName") String itemName,
+                                 @Param("color") String color,
+                                 @Param("size") String size,
+                                 @Param("itemInfo") String itemInfo,
+                                 @Param("brand") String brand,
+                                 @Param("price") int price,
+                                 @Param("category") String category);
+
+    @Modifying
+    @Query("delete from CartItem c where c.item.id = :itemId")
+    void deleteByItemId(Long itemId);
 }
