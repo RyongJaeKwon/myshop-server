@@ -15,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -44,6 +46,10 @@ public class ReplyService {
         return entityToDto(reply);
     }
 
+    public List<ReplyDto> getReplyList(Long itemId) {
+        return replyRepository.getReplyListByItemId(itemId);
+    }
+
     public void delete(Long id) {
         replyRepository.deleteById(id);
     }
@@ -64,6 +70,7 @@ public class ReplyService {
                 .id(reply.getId())
                 .memberId(reply.getMember().getId())
                 .itemId(reply.getItem().getId())
+                .userId(reply.getMember().getUserId())
                 .content(reply.getContent())
                 .regDate(reply.getRegDate())
                 .modDate(reply.getModDate())
