@@ -54,7 +54,7 @@ public class JWTFilter extends OncePerRequestFilter {
             return true;
         }
 
-        if (request.getRequestURI().matches("/replies/")) {
+        if (request.getRequestURI().startsWith("/replies/")) {
             return true;
         }
 
