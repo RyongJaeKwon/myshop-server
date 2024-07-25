@@ -1,14 +1,12 @@
 package com.kwon.myshop.service;
 
-import com.kwon.myshop.domain.Item;
-import com.kwon.myshop.domain.ItemImage;
-import com.kwon.myshop.domain.QItem;
-import com.kwon.myshop.domain.Reply;
+import com.kwon.myshop.domain.*;
 import com.kwon.myshop.dto.ItemDto;
 import com.kwon.myshop.dto.PageRequestDto;
 import com.kwon.myshop.dto.PageResponseDto;
 import com.kwon.myshop.dto.ReplyDto;
 import com.kwon.myshop.exception.ItemNotFoundException;
+import com.kwon.myshop.repository.CartItemRepository;
 import com.kwon.myshop.repository.ItemRepository;
 import com.kwon.myshop.repository.ReplyRepository;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -34,7 +32,7 @@ public class ItemService {
 
     private final ItemRepository itemRepository;
     private final ReplyRepository replyRepository;
-    private final ReplyService replyService;
+    private final CartItemRepository cartItemRepository;
 
     public Long create(ItemDto itemDto) {
         Item item = dtoToEntity(itemDto);
@@ -64,15 +62,44 @@ public class ItemService {
         }
 
         itemRepository.save(item);
+
+        cartItemRepository.updateCartItemsByItemId(
+                item.getId(),
+                item.getItemName(),
+                item.getColor(),
+                item.getSize(),
+                item.getItemInfo(),
+                item.getBrand(),
+                item.getPrice(),
+                item.getCategory()
+        );
     }
 
     public void delete(Long id) {
+        cartItemRepository.deleteByItemId(id);
         itemRepository.deleteById(id);
     }
 
     public ItemDto getItemWithImages(Long id) {
         Item item = itemRepository.findByIdWithImages(id).orElseThrow(ItemNotFoundException::new);
-        return entityToDto(item);
+
+        List<String> fileNames = Optional.ofNullable(item.getImageList())
+                .orElseGet(Collections::emptyList)
+                .stream().map(ItemImage::getFileName).collect(Collectors.toList());
+
+        return ItemDto.builder()
+                .id(item.getId())
+                .itemName(item.getItemName())
+                .color(item.getColor())
+                .size(item.getSize())
+                .itemInfo(item.getItemInfo())
+                .brand(item.getBrand())
+                .price(item.getPrice())
+                .category(item.getCategory())
+                .uploadFileNames(fileNames)
+                .regDate(item.getRegDate())
+                .modDate(item.getModDate())
+                .build();
     }
 
     public List<ItemDto> getRecentItems() {
@@ -83,8 +110,7 @@ public class ItemService {
             Item item = (Item) res[0];
             ItemImage itemImage = (ItemImage) res[1];
 
-            List<Reply> replies = replyRepository.findByItemId(item.getId());
-            List<ReplyDto> replyDtos = replies.stream().map(replyService::entityToDto).collect(Collectors.toList());
+            List<ReplyDto> replyDtos = replyRepository.getReplyListByItemId(item.getId());
 
             ItemDto itemDto = ItemDto.builder()
                     .id(item.getId())
@@ -117,8 +143,7 @@ public class ItemService {
             Item item = (Item) res[0];
             ItemImage itemImage = (ItemImage) res[1];
 
-            List<Reply> replies = replyRepository.findByItemId(item.getId());
-            List<ReplyDto> replyDtos = replies.stream().map(replyService::entityToDto).collect(Collectors.toList());
+            List<ReplyDto> replyDtos = replyRepository.getReplyListByItemId(item.getId());
 
             ItemDto itemDto = ItemDto.builder()
                     .id(item.getId())
@@ -191,8 +216,7 @@ public class ItemService {
                 .orElseGet(Collections::emptyList)
                 .stream().map(ItemImage::getFileName).collect(Collectors.toList());
 
-        List<Reply> replies = replyRepository.findByItemId(item.getId());
-        List<ReplyDto> replyDtos = replies.stream().map(replyService::entityToDto).collect(Collectors.toList());
+        List<ReplyDto> replyDtos = replyRepository.getReplyListByItemId(item.getId());
 
         ItemDto itemDto = ItemDto.builder()
                 .id(item.getId())
