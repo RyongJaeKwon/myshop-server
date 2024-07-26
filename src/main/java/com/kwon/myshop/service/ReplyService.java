@@ -27,8 +27,11 @@ public class ReplyService {
     private final ItemRepository itemRepository;
     private final MemberRepository memberRepository;
 
-    public void create(ReplyDto replyDto) {
-        replyRepository.save(dtoToEntity(replyDto));
+    public Long create(ReplyDto replyDto) {
+
+        Reply savedReply = replyRepository.save(dtoToEntity(replyDto));
+
+        return savedReply.getId();
     }
 
     public ReplyDto update(ReplyDto replyDto) {
