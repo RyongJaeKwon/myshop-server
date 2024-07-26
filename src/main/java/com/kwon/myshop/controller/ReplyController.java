@@ -18,10 +18,10 @@ public class ReplyController {
     private final ReplyService replyService;
 
     @PostMapping("/")
-    public Map<String, String> create(@RequestBody ReplyDto replyDto) {
-        replyService.create(replyDto);
+    public Map<String, Long> create(@RequestBody ReplyDto replyDto) {
+        Long id = replyService.create(replyDto);
 
-        return Map.of("RESULT", "SUCCESS");
+        return Map.of("RESULT", id);
     }
 
     @PutMapping("/")
