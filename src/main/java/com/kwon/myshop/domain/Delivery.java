@@ -22,4 +22,13 @@ public class Delivery {
 
     @Enumerated(EnumType.STRING)
     private DeliveryStatus status;
+
+    @Embedded
+    private Address address;
+
+    private String receiverName;
+
+    private String receiverPhone;
+
+    private String message;
 }
