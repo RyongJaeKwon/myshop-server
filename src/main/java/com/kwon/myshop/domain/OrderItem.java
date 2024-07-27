@@ -15,7 +15,6 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     @JsonIgnore
@@ -25,6 +24,7 @@ public class OrderItem {
     @JoinColumn(name = "item_id")
     private Item item;
 
-    private int orderPrice;         // 주문 가격
-    private int quantity;           // 주문 수량
+    private int price;
+
+    private int quantity;
 }
