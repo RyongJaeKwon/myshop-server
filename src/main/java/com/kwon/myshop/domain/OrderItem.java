@@ -9,6 +9,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(exclude = {"order"})
 public class OrderItem {
 
     @Id
@@ -24,7 +25,12 @@ public class OrderItem {
     @JoinColumn(name = "item_id")
     private Item item;
 
-    private int price;
+    @Column(name = "order_price")
+    private int orderPrice;
 
     private int quantity;
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
 }
