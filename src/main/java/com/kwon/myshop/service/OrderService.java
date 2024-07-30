@@ -36,13 +36,13 @@ public class OrderService {
 
                     return OrderItem.builder()
                             .item(item)
-                            .price(dto.getPrice())
+                            .orderPrice(dto.getPrice())
                             .quantity(dto.getQuantity())
                             .build();
                 }).collect(Collectors.toList());
 
         int totalPrice = orderItems.stream()
-                .mapToInt(orderItem -> orderItem.getPrice() * orderItem.getQuantity()).sum();
+                .mapToInt(orderItem -> orderItem.getOrderPrice() * orderItem.getQuantity()).sum();
 
         Address deliveryAddress = Address.builder()
                 .postcode(orderCreateDto.getPostcode())
@@ -66,6 +66,9 @@ public class OrderService {
                 .orderDate(LocalDateTime.now())
                 .totalPrice(totalPrice)
                 .build();
+
+        order.getOrderItems().forEach(orderItem -> orderItem.setOrder(order));
+
         Order savedOrder = orderRepository.save(order);
 
         return savedOrder.getId();
@@ -82,13 +85,13 @@ public class OrderService {
 
                     return OrderItem.builder()
                             .item(item)
-                            .price(dto.getPrice())
+                            .orderPrice(dto.getPrice())
                             .quantity(dto.getQuantity())
                             .build();
                 }).collect(Collectors.toList());
 
         int totalPrice = orderItems.stream()
-                .mapToInt(orderItem -> orderItem.getPrice() * orderItem.getQuantity()).sum();
+                .mapToInt(orderItem -> orderItem.getOrderPrice() * orderItem.getQuantity()).sum();
 
         Address deliveryAddress = Address.builder()
                 .postcode(orderCreateDto.getPostcode())
@@ -112,6 +115,9 @@ public class OrderService {
                 .orderDate(LocalDateTime.now())
                 .totalPrice(totalPrice)
                 .build();
+
+        order.getOrderItems().forEach(orderItem -> orderItem.setOrder(order));
+
         Order savedOrder = orderRepository.save(order);
 
         List<Long> itemIds = cartItemList.stream().map(CartItemListDto::getItemId).collect(Collectors.toList());
@@ -121,7 +127,21 @@ public class OrderService {
     }
 
     public List<OrderDto> getOrdersByUserId(String userId) {
-        return orderRepository.findOrdersByUserId(userId);
+        List<Order> orders = orderRepository.findOrdersByUserId(userId);
+
+        return orders.stream().map(order ->
+                new OrderDto(
+                        order.getId(),
+                        order.getOrderDate(),
+                        order.getTotalPrice(),
+                        order.getStatus(),
+                        order.getOrderItems().stream().map(oi ->
+                                new OrderDto.OrderItemDto(
+                                        oi.getItem().getId(),
+                                        oi.getItem().getItemName()
+                                )).collect(Collectors.toList())
+                )).collect(Collectors.toList());
+
     }
 
     public List<OrderItemDto> getOrderItems(Long orderId) {
