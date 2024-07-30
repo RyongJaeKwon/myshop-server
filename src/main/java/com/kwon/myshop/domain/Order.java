@@ -14,7 +14,8 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Order extends BaseEntity {
+@ToString(exclude = {"delivery", "member"})
+public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
