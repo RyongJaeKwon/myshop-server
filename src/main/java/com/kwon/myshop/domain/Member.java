@@ -11,6 +11,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(exclude = {"address", "cart", "replies"})
 public class Member extends BaseEntity {
 
     @Id
@@ -48,6 +49,12 @@ public class Member extends BaseEntity {
 
     public void addRole(Role role) {
         this.role = role;
+    }
+
+    public void setOrder(Order order) {
+        if (order.getMember() == this) {
+            this.orders.add(order);
+        }
     }
 
 }
