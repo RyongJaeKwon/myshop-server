@@ -14,7 +14,7 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
             "new com.kwon.myshop.dto.OrderItemDto(oi.item.id, oi.item.itemName, oi.item.color, oi.item.size, oi.orderPrice, oi.quantity, ii.fileName) " +
             "from OrderItem oi " +
             "left join oi.item.imageList ii " +
-            "where oi.order.id = :orderId and ii.ord = 0 order by oi.orderPrice desc")
-    List<OrderItemDto> findOrderItemsByOrderId(@Param("orderId") Long orderId);
+            "where oi.order.member.userId = :userId and oi.order.id = :orderId and ii.ord = 0 order by oi.orderPrice desc")
+    List<OrderItemDto> findOrderItemsByOrderId(@Param("userId") String userId, @Param("orderId") Long orderId);
 
 }
