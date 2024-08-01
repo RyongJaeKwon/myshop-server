@@ -3,8 +3,6 @@ package com.kwon.myshop.domain;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.Arrays;
-
 @AllArgsConstructor
 @Getter
 public enum DeliveryStatus {
@@ -17,12 +15,5 @@ public enum DeliveryStatus {
 
     private final String title;
     private final String value;
-
-    public static DeliveryStatus findByDeliveryStatus(String deliveryStatus) {
-        return Arrays.stream(DeliveryStatus.values())
-                .filter(status -> status.getTitle().equals(deliveryStatus))
-                .findFirst()
-                .orElse(DEFAULT);
-    }
 
 }
