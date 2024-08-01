@@ -126,13 +126,13 @@ public class OrderService {
 
     public List<OrderDto> getOrdersByUserId(String userId) {
         List<Order> orders = orderRepository.findOrdersByUserId(userId);
-        log.info("orders: " + orders);
 
         return orders.stream().map(order -> OrderDto.builder()
                 .orderId(order.getId())
                 .orderDate(order.getOrderDate())
                 .totalPrice(order.getTotalPrice())
-                .status(order.getStatus())
+                .orderStatus(order.getStatus())
+                .deliveryStatus(order.getDelivery().getStatus().getValue())
                 .items(order.getOrderItems().stream().map(orderItem -> OrderDto.OrderItemDto.builder()
                         .itemId(orderItem.getItem().getId())
                         .itemName(orderItem.getItem().getItemName())
