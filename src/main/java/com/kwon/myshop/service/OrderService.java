@@ -7,8 +7,10 @@ import com.kwon.myshop.dto.OrderDto;
 import com.kwon.myshop.dto.OrderItemDto;
 import com.kwon.myshop.exception.ItemNotFoundException;
 import com.kwon.myshop.exception.MemberNotFoundException;
+import com.kwon.myshop.exception.OrderNotFoundException;
 import com.kwon.myshop.repository.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class OrderService {
 
     private final OrderRepository orderRepository;
@@ -29,20 +32,15 @@ public class OrderService {
 
     public Long createOrder(OrderCreateDto orderCreateDto) {
         Member member = memberRepository.findByUserId(orderCreateDto.getUserId()).orElseThrow(MemberNotFoundException::new);
+        Item item = itemRepository.findById(orderCreateDto.getItemId()).orElseThrow(ItemNotFoundException::new);
 
-        List<OrderItem> orderItems = orderCreateDto.getOrderItems().stream()
-                .map(dto -> {
-                    Item item = itemRepository.findById(dto.getItemId()).orElseThrow(ItemNotFoundException::new);
+        OrderItem orderItem = OrderItem.builder()
+                .item(item)
+                .orderPrice(orderCreateDto.getPrice())
+                .quantity(orderCreateDto.getQuantity())
+                .build();
 
-                    return OrderItem.builder()
-                            .item(item)
-                            .orderPrice(dto.getPrice())
-                            .quantity(dto.getQuantity())
-                            .build();
-                }).collect(Collectors.toList());
-
-        int totalPrice = orderItems.stream()
-                .mapToInt(orderItem -> orderItem.getOrderPrice() * orderItem.getQuantity()).sum();
+        int totalPrice = orderItem.getOrderPrice() * orderItem.getQuantity();
 
         Address deliveryAddress = Address.builder()
                 .postcode(orderCreateDto.getPostcode())
@@ -60,14 +58,14 @@ public class OrderService {
 
         Order order = Order.builder()
                 .member(member)
-                .orderItems(orderItems)
+                .orderItems(List.of(orderItem))
                 .delivery(delivery)
                 .status(OrderStatus.ORDER)
                 .orderDate(LocalDateTime.now())
                 .totalPrice(totalPrice)
                 .build();
 
-        order.getOrderItems().forEach(orderItem -> orderItem.setOrder(order));
+        orderItem.setOrder(order);
 
         Order savedOrder = orderRepository.save(order);
 
@@ -128,24 +126,31 @@ public class OrderService {
 
     public List<OrderDto> getOrdersByUserId(String userId) {
         List<Order> orders = orderRepository.findOrdersByUserId(userId);
+        log.info("orders: " + orders);
 
-        return orders.stream().map(order ->
-                new OrderDto(
-                        order.getId(),
-                        order.getOrderDate(),
-                        order.getTotalPrice(),
-                        order.getStatus(),
-                        order.getOrderItems().stream().map(oi ->
-                                new OrderDto.OrderItemDto(
-                                        oi.getItem().getId(),
-                                        oi.getItem().getItemName()
-                                )).collect(Collectors.toList())
-                )).collect(Collectors.toList());
+        return orders.stream().map(order -> OrderDto.builder()
+                .orderId(order.getId())
+                .orderDate(order.getOrderDate())
+                .totalPrice(order.getTotalPrice())
+                .status(order.getStatus())
+                .items(order.getOrderItems().stream().map(orderItem -> OrderDto.OrderItemDto.builder()
+                        .itemId(orderItem.getItem().getId())
+                        .itemName(orderItem.getItem().getItemName())
+                        .build()
+                ).collect(Collectors.toList()))
+                .build()
+        ).collect(Collectors.toList());
 
     }
 
-    public List<OrderItemDto> getOrderItems(Long orderId) {
-        return orderItemRepository.findOrderItemsByOrderId(orderId);
+    public List<OrderItemDto> getOrderItems(String userId, Long orderId) {
+        return orderItemRepository.findOrderItemsByOrderId(userId, orderId);
+    }
+
+    public void cancelOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow(OrderNotFoundException::new);
+
+        order.cancel();
     }
 
 }
