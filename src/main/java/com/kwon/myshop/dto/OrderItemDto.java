@@ -18,4 +18,10 @@ public class OrderItemDto {
     private int price;
     private int quantity;
     private String imageUrl;
+    private String receiverName;
+    private String receiverPhone;
+    private String message;
+    private String postcode;
+    private String basicAddress;
+    private String detailAddress;
 }
