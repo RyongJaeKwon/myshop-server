@@ -1,6 +1,7 @@
 package com.kwon.myshop.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.kwon.myshop.exception.OrderCancelException;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -41,4 +42,19 @@ public class Order {
     private LocalDateTime orderDate;
 
     private int totalPrice;
+
+    public void cancel() {
+
+        if (this.status == OrderStatus.CANCEL) {
+            throw new OrderCancelException("이미 취소된 주문입니다");
+        }
+
+        if (this.delivery.getStatus() == DeliveryStatus.DELIVERY_IN_PROGRESS ||
+                this.delivery.getStatus() == DeliveryStatus.DELIVERY_COMP) {
+            throw new OrderCancelException("배송중이거나 배송완료된 주문은 취소할 수 없습니다");
+        }
+
+        this.status = OrderStatus.CANCEL;
+    }
+
 }
