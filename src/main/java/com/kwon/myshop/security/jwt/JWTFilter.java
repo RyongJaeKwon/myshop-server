@@ -54,15 +54,6 @@ public class JWTFilter extends OncePerRequestFilter {
             return true;
         }
 
-        if (request.getRequestURI().startsWith("/replies/")) {
-            return true;
-        }
-
-        if (request.getRequestURI().startsWith("/orders/")) {
-            return true;
-        }
-
-
         return false;
     }
 
