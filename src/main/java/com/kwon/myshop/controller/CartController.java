@@ -17,14 +17,13 @@ public class CartController {
 
     private final CartService cartService;
 
-    @PreAuthorize("#cartItemDto.userId == authentication.name")
+    @PreAuthorize("#cartItemDto.userId == principal.username")
     @PostMapping("/")
     public List<CartItemListDto> changeCart(@RequestBody CartItemDto cartItemDto) {
 
         return cartService.create(cartItemDto);
     }
 
-    @PreAuthorize("#principal.name == authentication.name")
     @GetMapping("/list")
     public List<CartItemListDto> list(Principal principal) {
         String userId = principal.getName();
@@ -32,9 +31,8 @@ public class CartController {
         return cartService.getCartItems(userId);
     }
 
-    @PreAuthorize("#principal.name == authentication.name")
     @DeleteMapping("/{cartItemId}")
-    public List<CartItemListDto> delete(@PathVariable Long cartItemId, Principal principal) {
+    public List<CartItemListDto> delete(@PathVariable Long cartItemId) {
 
         return cartService.delete(cartItemId);
     }
