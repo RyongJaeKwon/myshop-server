@@ -1,4 +1,4 @@
-# MyShop
+# MyShop-server
 <br/>
 
 ## 🖥 프로젝트 소개
@@ -18,11 +18,6 @@
   * **Spring Data JPA**
   * **Querydsl**
   * **MariaDB**
-* ### 프론트엔드
-  * **React**
-  * **JavaScript**
-  * **Redux Toolkit**
-  * **Node.js**
 <br/>
 
 ## 📌 구현 기능
