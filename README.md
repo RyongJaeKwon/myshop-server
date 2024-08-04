@@ -17,6 +17,7 @@
   * **Spring Security**
   * **Spring Data JPA**
   * **Querydsl**
+  * **JUnit5**
   * **MariaDB**
 <br/>
 
